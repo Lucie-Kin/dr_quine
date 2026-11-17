@@ -8,13 +8,15 @@
 | 59 | semi-colomn | ; |
 | 9 | tab | \t |
 | 92 | backlash | \ |
+| 47 | slash | / |
+| 42 | asterisk | * |
 
 | Register | Ref | code |
 |:--------:|:---------:|:---------:|
 | rsi | %1$s | string src |
 | rdx | %2$c | char 34 |
 | rcx | %3$c | char 10 |
-| r8 | %4$c | char 59 |
+| r8 | %4$c | char 47 |
 | r9 | %5$c | char 9 |
 
 Commande pour tester:<br>

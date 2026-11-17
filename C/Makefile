@@ -18,7 +18,7 @@ SOBJ = $(SSRC:%.s=%.o)
 FILE = $(wildcard Colleen/Colleen_*) \
 		$(wildcard Grace/Grace_*) \
 		$(wildcard Sully/Sully_*) \
-		$(wildcard */tmp) tmp
+		$(wildcard */tmp* tmp*)
 
 all: $(NAME)
 
@@ -50,8 +50,8 @@ colleen: Colleen/Colleen
 grace: Grace/Grace
 	cd Grace && ./Grace ; diff Grace.c Grace_kid.c && echo -e "\nQUINE OK\n"
 
-sully: 
-	$(CC) $(CC_FLAGS) $(SOBJ) -o $(SNAME);cd Sully && ./Sully
+sully: $(SOBJ)
+	$(CC) $(CC_FLAGS) $(SOBJ) -o $(SNAME); cd Sully && ./Sully
 	@sleep 1
 	@echo -e "\n"
 	cd Sully && git diff --no-index --word-diff=porcelain Sully.c Sully_1.c | grep -E '^[+-][^+-]'
