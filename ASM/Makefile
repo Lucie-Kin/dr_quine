@@ -1,10 +1,10 @@
 NAME = dr_quine_asm
-CNAME = Colleen
-GNAME = Grace
-SNAME = Sully
+CNAME = Colleen/Colleen
+GNAME = Grace/Grace
+SNAME = Sully/Sully
 
 NASM = nasm
-ASM_FLAGS = -f macho64
+ASM_FLAGS = -f elf64
 
 CC = gcc
 CC_FLAGS = -Wall -Wextra -Werror
@@ -20,7 +20,8 @@ SOBJ = $(SSRC:%.s=%.o)
 
 FILE = $(wildcard Colleen/Colleen_*) \
 		$(wildcard Grace/Grace_*) \
-		$(wildcard Sully/Sully_*)
+		$(wildcard Sully/Sully_*) \
+		$(wildcard */tmp) tmp
 
 all: $(NAME)
 
@@ -42,8 +43,20 @@ clean:
 	@$(RM) $(COBJ) $(GOBJ) $(SOBJ)
 
 fclean: clean
-	@$(RM) $(CNAME) $(GNAME) $(SNAME)
+	@$(RM) $(CNAME) $(GNAME) $(SNAME) $(FILE)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+colleen: Colleen/Colleen
+	cd Colleen && ./Colleen > tmp; diff -u Colleen.s tmp && echo -e "\nQUINE OK\n"
+
+grace: Grace/Grace
+	cd Grace && ./Grace ; diff Grace.s Grace_kid.s && echo -e "\nQUINE OK\n"
+
+sully: 
+	$(NASM) $(ASM_FLAGS) $(SSRC) -o $(SOBJ) && $(CC) $(CC_FLAGS) $(SOBJ) -o $(SNAME); cd Sully && ./Sully
+	@sleep 1
+	@echo -e "\n"
+	cd Sully && git diff --no-index --word-diff=porcelain Sully.s Sully_1.s | grep -E '^[+-][^+-]'
+
+.PHONY: all clean fclean re colleen grace sully

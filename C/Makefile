@@ -1,39 +1,59 @@
-# LIBASM = libasm.a
-NAME = Colleen
+NAME = dr_quine_asm
+CNAME = Colleen/Colleen
+GNAME = Grace/Grace
+SNAME = Sully/Sully
 
-SRC  = 
-
-FILE = $(wildcard FILE/*.txt) $(wildcard FILE/*.bin)
-
-OBJ = $(LIBSRC:.s=.o)
-
-NASM = nasm
-NFLAGS = -f elf64 -g -F dwarf
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -g -no-pie
-RM = rm -f
-AR = ar
-ARFLAGS = rcs
-WRAPPER = -Wl,--wrap=malloc
-GDB = gdb
+CC_FLAGS = -Wall -Wextra -Werror
+RM = rm -rf
 
-all: 
+CSRC = Colleen/Colleen.s
+GSRC = Grace/Grace.s
+SSRC = Sully/Sully.s
 
-# : $(OBJ)
-# 	$(AR) $(ARFLAGS) $@ $^
+COBJ = $(CSRC:%.s=%.o)
+GOBJ = $(GSRC:%.s=%.o)
+SOBJ = $(SSRC:%.s=%.o)
 
-$(NAME): $(SRC) 
-	$(CC) $(CFLAGS) $(SRC) $(WRAPPER) -o $@
+FILE = $(wildcard Colleen/Colleen_*) \
+		$(wildcard Grace/Grace_*) \
+		$(wildcard Sully/Sully_*) \
+		$(wildcard */tmp) tmp
 
-%.o: %.s
-	$(NASM) $(NFLAGS) $< -o $@
+all: $(NAME)
+
+$(NAME): $(CNAME) $(GNAME) $(SNAME)
+
+$(CNAME): $(COBJ)
+	$(CC) $(CC_FLAGS) -o $@ $^
+
+$(GNAME): $(GOBJ)
+	$(CC) $(CC_FLAGS) -o $@ $^
+	
+$(SNAME): $(SOBJ)
+	$(CC) $(CC_FLAGS) -o $@ $^
+
+%.o: %.c
+	@$(CC) $(CC_FLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ)
+	@$(RM) $(COBJ) $(GOBJ) $(SOBJ)
 
 fclean: clean
-	$(RM) $(NAME) $(FILE)
+	@$(RM) $(CNAME) $(GNAME) $(SNAME) $(NAME) $(FILE)
 
 re: fclean all
 
-.PHONY: all test clean fclean re
+colleen: Colleen/Colleen
+	cd Colleen && ./Colleen > tmp; diff -u Colleen.c tmp && echo -e "\nQUINE OK\n"
+
+grace: Grace/Grace
+	cd Grace && ./Grace ; diff Grace.c Grace_kid.c && echo -e "\nQUINE OK\n"
+
+sully: 
+	$(CC) $(CC_FLAGS) $(SOBJ) -o $(SNAME);cd Sully && ./Sully
+	@sleep 1
+	@echo -e "\n"
+	cd Sully && git diff --no-index --word-diff=porcelain Sully.c Sully_1.c | grep -E '^[+-][^+-]'
+
+.PHONY: all clean fclean re colleen grace sully
