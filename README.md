@@ -20,10 +20,17 @@
 | r9 | %5$c | char 9 |
 
 Commande pour tester:<br>
-``nasm -f elf64 Colleen.s -o test.o; gcc test.o -o test;./test > tmp; diff -u Colleen.s tmp  && echo "QUINE OK"``
+```bash
+nasm -f elf64 Colleen.s -o test.o; gcc test.o -o test;./test > tmp; diff -u Colleen.s tmp  && echo "QUINE OK"
+```
 #
 ## SULLY
 
-Commande pour tester:<br>
-``gcc -Wall -Werror -Wextra Sully.c -o Sully; ./Sully``<br>
-``git diff --no-index --word-diff=porcelain Sully.c Sully_1.c | grep -E '^[+-][^+-]'``
+Commandes pour tester:<br>
+```bash
+gcc -Wall -Werror -Wextra Sully.c -o Sully; ./Sully
+
+git diff --no-index --word-diff=porcelain Sully.c Sully_1.c | grep -E '^[+-][^+-]'
+
+git diff --no-index --word-diff=plain Sully_2.c Sully_5.c | grep -oE '\[-[^]]*-\]|\{\+[^}]*\+\}'
+```

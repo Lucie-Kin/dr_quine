@@ -8,7 +8,7 @@ ASM_FLAGS = -f elf64
 
 CC = gcc
 CC_FLAGS = -Wall -Wextra -Werror
-RM = rm -f
+RM = rm -rf
 
 CSRC = Colleen/Colleen.s
 GSRC = Grace/Grace.s
@@ -21,7 +21,7 @@ SOBJ = $(SSRC:%.s=%.o)
 FILE = $(wildcard Colleen/Colleen_*) \
 		$(wildcard Grace/Grace_*) \
 		$(wildcard Sully/Sully_*) \
-		$(wildcard */tmp) tmp
+		$(wildcard */tmp* tmp*)
 
 all: $(NAME)
 

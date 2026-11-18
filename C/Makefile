@@ -54,6 +54,6 @@ sully: $(SOBJ)
 	$(CC) $(CC_FLAGS) $(SOBJ) -o $(SNAME); cd Sully && ./Sully
 	@sleep 1
 	@echo -e "\n"
-	cd Sully && git diff --no-index --word-diff=porcelain Sully.c Sully_1.c | grep -E '^[+-][^+-]'
+	cd Sully && git diff --no-index --word-diff=porcelain Sully_2.c Sully_4.c | grep -E '^[+-][^+-]'
 
 .PHONY: all clean fclean re colleen grace sully
